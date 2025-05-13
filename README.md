@@ -1,10 +1,14 @@
 # Pasos correr el frontend
 
 ### Nota 
+Configura los archivos en este orden    
+**server, database, client**
+
+**Estas en client**
 
     Estar en la ruta de esta carpeta que se llama client
 
-1. Cambiar el nombre del archivo .env.template a .env y agregar informacion de tu contenedor
+1. Cambiar el nombre del archivo .env.template a .env y agregar la informacion correspondiente
 
 2. Ejecuta el comando
 
