@@ -1,0 +1,42 @@
+.container-button-delete {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    width: 100%;
+    margin-bottom: 5px;
+}
+.buttons-delete {
+    width: 15%;
+    font-family: cursive;
+    padding: 5px;
+    margin-left: 10px;
+    margin-right: 10px;
+    color: rgb(150, 3, 3);
+    background-color: transparent;
+    border-radius: 5px;
+    outline: auto;
+    transition: all 500ms;
+
+}
+.buttons-delete:active {
+    transform: scale( 1.2, 1.2 );
+}
+.buttons-delete:hover {
+    color: red;
+    background-color: rgb(243, 241, 241);
+}
+
+@media ( max-width: 843px ){
+    .buttons-delete {
+        width: 20%;
+    }
+}
+
+@media ( max-width: 619px ){
+
+    .buttons-delete {
+        width: 35%;
+        font-size: 16px;
+    }
+
+}
