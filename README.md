@@ -2,7 +2,7 @@
 
 ### Nota 
 Configura los archivos en este orden    
-**server, database, client**
+**database, server, client**
 
 **Estas en client**
 
