@@ -17,6 +17,10 @@ const AddProductToList = (  )=>{
 
     const [ currentProductSelectionState, setcurrentProductSelectionState ] = useState({});
 
+    const [ idCurrentProductoSelection, setIdCurrentProductSelection ] = useState(0);
+    const [ urlProductPhoto, setUrlProductPhoto ] = useState('');
+    const [ productPhotoOtherState ,setProductPhotoOtherState ]=useState({});
+    const [ inputProductNameState, setInputProductNameState ] = useState('')
     const [ inputAmountState, setInputAmountState ] = useState( 1 );
     const [ inputPriceState, setInputPriceState ] = useState( 1 );
     const [ inputAmountStateEdit, setInputAmountStateEdit ] = useState( 1 );
@@ -51,6 +55,7 @@ const AddProductToList = (  )=>{
     }
 
     
+    
     const { id, product_name, product_photo } = currentProductSelectionState;
 
     const resetProductSelection = ( )=>{
@@ -66,8 +71,52 @@ const AddProductToList = (  )=>{
  
     const currentProductAdded = async( currentProductSelectionState, product_amount, product_price, )=>{
 
-        const id = parseInt( currentProductSelectionState.id );
-        const { product_name, product_photo } = currentProductSelectionState
+        setIdCurrentProductSelection( parseInt( currentProductSelectionState.id ) );
+        const { product_name, product_photo } = currentProductSelectionState;
+        const id = idCurrentProductoSelection;
+
+        // if( product_name != 'Otros' ){
+        //     console.log('entre')
+        //     setInputProductNameState( product_name );
+        //     setUrlProductPhoto( product_photo );
+
+        // }
+
+        if( product_name === 'Otros' && productPhotoOtherState ){
+
+            const formData = new FormData();
+                  formData.append( 'image', productPhotoOtherState )
+            
+            const uploadProductPhoto = await axios.post(`https://api.imgbb.com/1/upload?key=12474afbd8f57b42c6df468c4bcf3cd7`, formData, {
+                headers: {
+                    "Content-Type": "multipart/form-data"
+                }
+            });
+            
+            const { success } = uploadProductPhoto.data;
+            const { url } = uploadProductPhoto.data.data;
+
+            if( success === true ){
+
+                console.log(inputProductNameState)
+                const product = {
+                    product_name: inputProductNameState,
+                    product_photo: url,
+                    product_amount: 0,
+                    product_price: 0,
+                };
+
+                await axios.post(`${urlConnectionBackend}api/create-product`, product)            
+                .then( ( {data} ) => {
+                    const productId = parseInt( data.id );
+                    setIdCurrentProductSelection(productId);
+
+                })
+            }
+        };
+
+        console.log(urlProductPhoto)
+        console.log(inputProductNameState)
 
         const checkRepeatId = receiveProductState.findIndex( ( product )=> (
 
@@ -90,7 +139,7 @@ const AddProductToList = (  )=>{
             result,
             } 
     
-            axios.post( `${urlConnectionBackend}api/add-product-to-list`, product )
+            await axios.post( `${urlConnectionBackend}api/add-product-to-list`, product )
             .then( ( ) => {
 
                 setInputAmountState( 1 );
@@ -135,6 +184,16 @@ const AddProductToList = (  )=>{
         }
     };
 
+    const onChangeProductPhoto = ( { target } )=>{
+
+        const productPhotoOther = target.files[0];
+        setProductPhotoOtherState( productPhotoOther );
+    }
+    const functionValueProductNameState = ( { target } )=>{
+
+        const currentValueProductName = target.value;
+        setInputProductNameState( currentValueProductName );
+    }
     const functionValueAmountState = ( { target } )=>{
 
         const currentValueInput = parseInt( target.value );
@@ -231,10 +290,17 @@ const AddProductToList = (  )=>{
                     <tbody>
                        { currentProductSelectionState.id != undefined ? <tr>
                             <td className="td-photo-container">
-                                <img className="photo-img" src={ product_photo } id="product-photo-input"/>
+                                { ( product_name === 'Otros' ? 
+                                    <input type="file" onChange={ onChangeProductPhoto } className="photo-img" name="photo-img" />
+                                    : <img className="photo-img" src={ product_photo } id="product-photo-input"/>
+                                ) }
                             </td>
                             <td className="td-product-container">
-                                { product_name }
+                                { ( product_name === 'Otros' ? 
+                                    <input type="name" value={ inputProductNameState } onChange={ functionValueProductNameState } className="input-product-name" name="product-name" />
+                                    :  product_name 
+                                ) }
+                                
                             </td>
                             <td className="td-amount-container">
                                 <input className="product-amount-input" type="number" value={ inputAmountState } onChange={ functionValueAmountState } />
