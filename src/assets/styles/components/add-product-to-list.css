@@ -93,6 +93,9 @@
     width: 100%;
     height: 35px;
 }
+.input-product-name{
+    width: 95%;
+}
 .product-amount-input,
 .product-price-input{
     width: 95%;
