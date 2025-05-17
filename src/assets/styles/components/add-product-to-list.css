@@ -105,9 +105,10 @@
     display: block;
     width: 100%;
     text-align: center;
-    margin-top: -1rem;
+    margin-top: -1.6rem;
     font-family: 'icon-font2';
-    font-size: 1.8rem;
+    font-size: 3rem;
+    cursor: pointer;
 }
 .input-file {
     display: none;
