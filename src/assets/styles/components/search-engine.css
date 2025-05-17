@@ -6,6 +6,7 @@
 .input-search {
     width: 85%;
     font-family: cursive;
+    color: rgb(180, 34, 24);
 }
 
 .search-bar-container {
@@ -90,7 +91,7 @@
     .input-search {
         font-size: 1.2rem;
         font-weight: bold;
-        color: rgb(180, 34, 24);
+        
     }
 
     .button-search:hover{
