@@ -87,6 +87,12 @@
         margin-bottom: 10px;
     }
 
+    .input-search {
+        font-size: 1.2rem;
+        font-weight: bold;
+        color: rgb(180, 34, 24);
+    }
+
     .button-search:hover{
         background-color: transparent;
     }

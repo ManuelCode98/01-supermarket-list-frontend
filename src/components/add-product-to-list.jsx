@@ -17,7 +17,8 @@ const AddProductToList = (  )=>{
 
     const [ currentProductSelectionState, setcurrentProductSelectionState ] = useState({});
 
-    const [ idCurrentProductoSelection, setIdCurrentProductSelection ] = useState(0);
+    const [ buttonAddState, setButtonAddState ] = useState( 'W' );
+    const [ buttonCancelState, setButtonCancelState ] = useState( 'X' );
     const [ urlProductPhoto, setUrlProductPhoto ] = useState('');
     const [ productPhotoOtherState ,setProductPhotoOtherState ]=useState({});
     const [ inputProductNameState, setInputProductNameState ] = useState('')
@@ -71,16 +72,11 @@ const AddProductToList = (  )=>{
  
     const currentProductAdded = async( currentProductSelectionState, product_amount, product_price, )=>{
 
-        setIdCurrentProductSelection( parseInt( currentProductSelectionState.id ) );
-        const { product_name, product_photo } = currentProductSelectionState;
-        const id = idCurrentProductoSelection;
-
-        // if( product_name != 'Otros' ){
-        //     console.log('entre')
-        //     setInputProductNameState( product_name );
-        //     setUrlProductPhoto( product_photo );
-
-        // }
+        let id = parseInt( currentProductSelectionState.id );
+        let product_name = currentProductSelectionState.product_name;
+        let product_photo = currentProductSelectionState.product_photo;
+        setButtonAddState('')
+        setButtonCancelState('')
 
         if( product_name === 'Otros' && productPhotoOtherState ){
 
@@ -98,7 +94,6 @@ const AddProductToList = (  )=>{
 
             if( success === true ){
 
-                console.log(inputProductNameState)
                 const product = {
                     product_name: inputProductNameState,
                     product_photo: url,
@@ -107,22 +102,27 @@ const AddProductToList = (  )=>{
                 };
 
                 await axios.post(`${urlConnectionBackend}api/create-product`, product)            
-                .then( ( {data} ) => {
-                    const productId = parseInt( data.id );
-                    setIdCurrentProductSelection(productId);
+                .then( ({data})=>{
+                    
+                    id = parseInt( data.id );
 
+                    product_name = inputProductNameState;
+                    product_photo = url;
                 })
+                
             }
         };
-
-        console.log(urlProductPhoto)
-        console.log(inputProductNameState)
 
         const checkRepeatId = receiveProductState.findIndex( ( product )=> (
 
             product.id === id
 
         ));
+
+        if( checkRepeatId != -1 ){
+            setButtonAddState('W')
+            setButtonCancelState('X')
+        }
 
         if( checkRepeatId === -1 ){
 
@@ -145,7 +145,9 @@ const AddProductToList = (  )=>{
                 setInputAmountState( 1 );
                 setInputPriceState( 1 );
                 setReceiveProductState( prevArray => [ ...prevArray, product ] );
-                setcurrentProductSelectionState({}); 
+                setcurrentProductSelectionState({});
+                setButtonAddState('W');
+                setButtonCancelState('X'); 
             })
             return;
         }
@@ -272,7 +274,7 @@ const AddProductToList = (  )=>{
                     })      
                 }
             })
-        }
+        } 
     };
 
     return (
@@ -290,14 +292,17 @@ const AddProductToList = (  )=>{
                     <tbody>
                        { currentProductSelectionState.id != undefined ? <tr>
                             <td className="td-photo-container">
-                                { ( product_name === 'Otros' ? 
-                                    <input type="file" onChange={ onChangeProductPhoto } className="photo-img" name="photo-img" />
-                                    : <img className="photo-img" src={ product_photo } id="product-photo-input"/>
+                                { ( product_name === 'Otros' ?
+                                    <>
+                                        <label htmlFor='input-file' className="label-file" >D</label> 
+                                        <input type="file" id='input-file' onChange={ onChangeProductPhoto } className="photo-img input-file" name="photo-img" />
+                                    </>
+                                    :   <img className="photo-img" src={ product_photo } id="product-photo-input"/>
                                 ) }
                             </td>
                             <td className="td-product-container">
                                 { ( product_name === 'Otros' ? 
-                                    <input type="name" value={ inputProductNameState } onChange={ functionValueProductNameState } className="input-product-name" name="product-name" />
+                                    <input type="name" placeholder="Nombre del producto..." value={ inputProductNameState } onChange={ functionValueProductNameState } className="input-product-name" name="product-name" />
                                     :  product_name 
                                 ) }
                                 
@@ -309,8 +314,8 @@ const AddProductToList = (  )=>{
                                 <input className="product-price-input" type="number" value={ inputPriceState } onChange={ functionValuePriceState} />
                             </td>
                             <td className="td-buttons-container">
-                                <div className="buttons buttons-add-cancel add" onClick={ (()=>{ currentProductAdded( currentProductSelectionState, inputAmountState, inputPriceState ) }) } > W </div>
-                                <div className="buttons buttons-add-cancel cancel" onClick={ (()=>{ resetProductSelection() }) }> X </div>
+                                <div className="buttons buttons-add-cancel add" onClick={ (()=>{ currentProductAdded( currentProductSelectionState, inputAmountState, inputPriceState ) }) } > {buttonAddState} </div>
+                                <div className="buttons buttons-add-cancel cancel" onClick={ (()=>{ resetProductSelection() }) }> {buttonCancelState} </div>
                             </td>
                         </tr> 
                         : 
