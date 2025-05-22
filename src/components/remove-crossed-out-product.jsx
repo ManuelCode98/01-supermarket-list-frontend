@@ -13,7 +13,6 @@ const RemoveCrossedOutProduct = (  )=>{
 
        if( question === true ){
 
-        // axios.delete(`http://localhost:3002/api/delete-all-products`)
         axios.delete(`${urlConnectionBackend}api/delete-all-products`)
 
         .then( ( {data} ) =>{
@@ -21,19 +20,26 @@ const RemoveCrossedOutProduct = (  )=>{
             const products = data.data;
             uploadProductsAfterDeleting( products );
         })
+        .catch( ( { message } ) =>{
+
+            console.log(`No hay conexion con el backend ${ message }`)
+        } )
 
         return
        }
     };
 
     const deleteCrossedOutProducts = ()=>{
-        // axios.get(`http://localhost:3002/api/get-crossed-out-products` )
         axios.get(`${urlConnectionBackend}api/get-crossed-out-products` )
 
         .then( ( {data} ) =>{
 
             const products = data.data;
             uploadProductsAfterDeleting( products )
+        } )
+        .catch( ( { message } ) =>{
+
+             console.log(`No hay conexion con el backend ${ message }`)
         } )
     }
 

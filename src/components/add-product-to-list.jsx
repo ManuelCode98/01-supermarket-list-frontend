@@ -42,9 +42,13 @@ const AddProductToList = (  )=>{
             axios.get( `${urlConnectionBackend}api/show-products` )
             .then( ({ data }) => {
                 const { status, success, products } = data;
-                        
+                    
                 if( status === 200 && success === true ) setReceiveProductState( products )      
             })
+            .catch( ( { message } ) =>{
+
+                console.log(`No hay conexion con el backend ${ message }`)
+            } )
     };
     
     // Aca cargo la variable con el valor total de cada producto para luego sumarlo 
@@ -179,7 +183,11 @@ const AddProductToList = (  )=>{
                     item.id === id ? { ...item, product_amount, product_price, result } :item
                     )
                 )  
-            });
+            })
+            .catch( ( { message } ) =>{
+
+                console.log(`No hay conexion con el backend ${ message }`)
+            } )
             
             setIndexProduct( null );
             setEditOrNotEdit('not-edit');
@@ -274,6 +282,10 @@ const AddProductToList = (  )=>{
                     })      
                 }
             })
+            .catch( ( { message } ) =>{
+
+                console.log(`No hay conexion con el backend ${ message }`)
+            } )
         } 
     };
 

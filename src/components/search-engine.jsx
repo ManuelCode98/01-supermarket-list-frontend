@@ -33,7 +33,12 @@ const SeachEngine = (  )=>{
                 setProductFoundByNameArr( searchingProductName );
                 
                 return;
-            });
+            })
+            .catch( ( { message } ) =>{
+
+                console.log(`No hay conexion con el backend ${ message }`)
+            } )
+            
         } if( !letterSearch ){
 
             setProductFoundByNameArr( [] );
