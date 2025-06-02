@@ -2,7 +2,6 @@ import { useState } from "react";
 import axios from 'axios';
 import '../assets/styles/components/add-product-to-list.css';
 
-const urlConnectionBackend = import.meta.env.VITE_URL_CONNECTION_BACKEND;
 
 let currentProductSelection;
 let uploadProductsAfterDeleting;
@@ -13,7 +12,7 @@ const receiveProduct = ( { id , product_name, product_photo, product_amount, pro
     id && currentProductSelection( { id, product_name, product_photo, product_amount, product_price } );
 };
 
-const AddProductToList = (  )=>{
+const AddProductToList = ( { urlConnectionBackend } )=>{
 
     const [ currentProductSelectionState, setcurrentProductSelectionState ] = useState({});
 

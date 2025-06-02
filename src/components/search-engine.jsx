@@ -7,7 +7,8 @@ import { receiveProduct } from './add-product-to-list';
 
 const urlConnectionBackend = import.meta.env.VITE_URL_CONNECTION_BACKEND;
 
-const SeachEngine = (  )=>{
+const SeachEngine = ( { urlConnectionBackend } )=>{
+    
     const [ searchingProduct, setSearchingProduct ] = useState('');
     const [ productFoundByNameArr, setProductFoundByNameArr ] = useState([]);
     

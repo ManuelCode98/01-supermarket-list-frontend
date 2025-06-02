@@ -3,9 +3,8 @@ import { uploadProductsAfterDeleting } from './add-product-to-list';
 import '../assets/styles/components/remove-crossed-out-product.css';
 
 
-const urlConnectionBackend = import.meta.env.VITE_URL_CONNECTION_BACKEND;
 
-const RemoveCrossedOutProduct = (  )=>{
+const RemoveCrossedOutProduct = ( { urlConnectionBackend } )=>{
 
     const deleteAll = ( )=>{
 
