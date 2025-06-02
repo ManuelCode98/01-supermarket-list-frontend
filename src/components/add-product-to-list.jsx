@@ -383,7 +383,7 @@ const AddProductToList = ( { urlConnectionBackend } )=>{
                         {
                             receiveProductState && 
                                 <div className="row-total-value">
-                                    <div className="total-value" >{ total.reduce( ( acc, currentValue ) => acc + currentValue, 0 ) }</div>
+                                    <div className="total-value" >{ total.reduce( ( acc, currentValue ) => acc + currentValue, 0 ).toLocaleString() }</div>
                                 </div>
                         }
             </div>
