@@ -2,9 +2,9 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 
 
-const connectionDatabase = ()=>{
+const useConnectionDatabase = ()=>{
 
-    const [ urlConnectionBackend, setUrlConnectionBackend ] = useState('');
+    const [ urlConnectionBackendCondition, setUrlConnectionBackendCondition ] = useState('');
 
     const urlConnectionBackendOne = import.meta.env.VITE_URL_CONNECTION_BACKEND;
     const urlConnectionBackendTwo = import.meta.env.VITE_URL_CONNECTION_BACKEND_TWO;
@@ -12,22 +12,29 @@ const connectionDatabase = ()=>{
     useEffect(()=>{
         
         const getConnectionBackend = async()=>{
-            await axios.get( urlConnectionBackendOne ).then( ({ status }) => {
+            
+            await axios.get( urlConnectionBackendOne, {timeout: 1000} ).then( ({ status }) => {
 
-            if( status === 200 ) return setUrlConnectionBackend( urlConnectionBackendOne );
+            if( status === 200 ){
+                setUrlConnectionBackendCondition( urlConnectionBackendOne );
+                return
+            }
             
             })
             .catch ( () =>{
-                console.log( 'Error al intentar conectar con el backend' );
+                console.log( 'Backend 1 no respondio' );
 
             });
 
-            await axios.get( urlConnectionBackendTwo ).then( ({ status }) => {
-                if( status === 200 ) return setUrlConnectionBackend( urlConnectionBackendTwo );
+            await axios.get( urlConnectionBackendTwo, { timeout: 1000 } ).then( ({ status }) => {
+                if( status === 200 ){
+                    setUrlConnectionBackendCondition( urlConnectionBackendTwo );
+                    return
+                }
                 
             })
             .catch ( () =>{
-                console.log( 'Error al intentar conectar con el backend' );
+                console.log( 'Backend 2 no respondio' );
 
             });       
         }
@@ -36,11 +43,11 @@ const connectionDatabase = ()=>{
         getConnectionBackend();
     },[])
 
-    return urlConnectionBackend;
+    return urlConnectionBackendCondition;
 
 }
 
 
 export {
-    connectionDatabase
+    useConnectionDatabase
 }

@@ -18,7 +18,6 @@ const AddProductToList = ( { urlConnectionBackend } )=>{
 
     const [ buttonAddState, setButtonAddState ] = useState( 'W' );
     const [ buttonCancelState, setButtonCancelState ] = useState( 'X' );
-    const [ urlProductPhoto, setUrlProductPhoto ] = useState('');
     const [ productPhotoOtherState ,setProductPhotoOtherState ]=useState({});
     const [ inputProductNameState, setInputProductNameState ] = useState('')
     const [ inputAmountState, setInputAmountState ] = useState( 1 );
