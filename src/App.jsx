@@ -13,9 +13,15 @@ function App() {
 
   return (
       <div style={ { width: width < 800 ? width *90 /100 : width < 619 ? width *95 /100 : width *90 / 100 } } className='container-body'>
-        <SeachEngine urlConnectionBackend = { urlConnectionBackend } />
-        <RemoveCrossedOutProduct urlConnectionBackend = { urlConnectionBackend } />
-        <AddProductToList urlConnectionBackend = { urlConnectionBackend } />
+        {
+          urlConnectionBackend && (
+            <>
+              <SeachEngine urlConnectionBackend = { urlConnectionBackend } />
+              <RemoveCrossedOutProduct urlConnectionBackend = { urlConnectionBackend } />
+              <AddProductToList urlConnectionBackend = { urlConnectionBackend } />
+            </>
+          )
+        }
       </div>
   );
 }

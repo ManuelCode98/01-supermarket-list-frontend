@@ -1,6 +1,9 @@
 import { useState } from "react";
 import axios from 'axios';
 import '../assets/styles/components/add-product-to-list.css';
+import { loadProductsWhenReloading } from "./helpers-add-product-to-list/load-products-when-reloading";
+import { useEffect } from "react";
+import { totalCostOfAllProducts } from "./helpers-add-product-to-list/total-cost-of-all-products";
 
 
 let currentProductSelection;
@@ -26,6 +29,8 @@ const AddProductToList = ( { urlConnectionBackend } )=>{
     const [ inputPriceStateEdit, setInputPriceStateEdit ] = useState( 1 );
     
     const [ receiveProductState, setReceiveProductState ] = useState( [] );
+    
+    const [ resulTotalState, setResulTotalState ] = useState([]);
 
     const [ editOrNotEdit, setEditOrNotEdit ] = useState('not-edit');
     const [ indexProduct, setIndexProduct ] = useState( null );
@@ -35,28 +40,24 @@ const AddProductToList = ( { urlConnectionBackend } )=>{
     currentProductSelection = setcurrentProductSelectionState;
     uploadProductsAfterDeleting = setReceiveProductState;
 
-    if( !receiveProductState.length ){
+    useEffect(()=>{
 
-            axios.get( `${urlConnectionBackend}api/show-products` )
-            .then( ({ data }) => {
-                const { status, success, products } = data;
-                    
-                if( status === 200 && success === true ) setReceiveProductState( products )      
-            })
-            .catch( ( { message } ) =>{
+        if( !receiveProductState.length ){
 
-                console.log(`No hay conexion con el backend ${ message }`)
-            } )
-    };
-    
-    // Aca cargo la variable con el valor total de cada producto para luego sumarlo 
-    let total = [];
-    
-    for (let i = 0; i < receiveProductState.length; i++) {
-        
-        total.push( receiveProductState[i].result);                    
-    }
+            const getAllProducts = async( )=>{
 
+                const products = await loadProductsWhenReloading( urlConnectionBackend )
+                setReceiveProductState( products )
+            }
+            getAllProducts()    
+        };
+    }, [ ])
+
+    useEffect(() => {
+
+        setResulTotalState( totalCostOfAllProducts( receiveProductState ) )
+
+    }, [receiveProductState]);
     
     
     const { id, product_name, product_photo } = currentProductSelectionState;
@@ -72,89 +73,6 @@ const AddProductToList = ( { urlConnectionBackend } )=>{
 
     };
  
-    const currentProductAdded = async( currentProductSelectionState, product_amount, product_price, )=>{
-
-        let id = parseInt( currentProductSelectionState.id );
-        let product_name = currentProductSelectionState.product_name;
-        let product_photo = currentProductSelectionState.product_photo;
-        setButtonAddState('')
-        setButtonCancelState('')
-
-        if( product_name === 'Otros' && productPhotoOtherState ){
-
-            const formData = new FormData();
-                  formData.append( 'image', productPhotoOtherState )
-            
-            const uploadProductPhoto = await axios.post(`https://api.imgbb.com/1/upload?key=12474afbd8f57b42c6df468c4bcf3cd7`, formData, {
-                headers: {
-                    "Content-Type": "multipart/form-data"
-                }
-            });
-            
-            const { success } = uploadProductPhoto.data;
-            const { url } = uploadProductPhoto.data.data;
-
-            if( success === true ){
-
-                const product = {
-                    product_name: inputProductNameState,
-                    product_photo: url,
-                    product_amount: 0,
-                    product_price: 0,
-                };
-
-                await axios.post(`${urlConnectionBackend}api/create-product`, product)            
-                .then( ({data})=>{
-                    
-                    id = parseInt( data.id );
-
-                    product_name = inputProductNameState;
-                    product_photo = url;
-                })
-                
-            }
-        };
-
-        const checkRepeatId = receiveProductState.findIndex( ( product )=> (
-
-            product.id === id
-
-        ));
-
-        if( checkRepeatId != -1 ){
-            setButtonAddState('W')
-            setButtonCancelState('X')
-        }
-
-        if( checkRepeatId === -1 ){
-
-            const crossed_out = 'not-crossed-out';
-            const result = product_amount * product_price;
-
-            const product = {
-            id,
-            product_name,
-            product_photo,
-            crossed_out,
-            product_amount,
-            product_price,
-            result,
-            } 
-    
-            await axios.post( `${urlConnectionBackend}api/add-product-to-list`, product )
-            .then( ( ) => {
-
-                setInputAmountState( 1 );
-                setInputPriceState( 1 );
-                setReceiveProductState( prevArray => [ ...prevArray, product ] );
-                setcurrentProductSelectionState({});
-                setButtonAddState('W');
-                setButtonCancelState('X'); 
-            })
-            return;
-        }
-    };
-
     const updateProduct = async( index, id, product_name, product_photo, product_amount, product_price, crossed_out ) => {
 
         if( indexProduct === index ){
@@ -287,6 +205,20 @@ const AddProductToList = ( { urlConnectionBackend } )=>{
         } 
     };
 
+    const parametersCurrentProductAdded = {
+        urlConnectionBackend, 
+        currentProductSelectionState, 
+        setcurrentProductSelectionState, 
+        inputAmountState, 
+        inputPriceState, 
+        setButtonAddState, 
+        setButtonCancelState, 
+        productPhotoOtherState, 
+        inputProductNameState, 
+        receiveProductState, 
+        setReceiveProductState
+    }
+
     return (
             <div className="container-products">
                 <table className="container-table" >
@@ -324,7 +256,7 @@ const AddProductToList = ( { urlConnectionBackend } )=>{
                                 <input className="product-price-input" type="number" value={ inputPriceState } onChange={ functionValuePriceState} />
                             </td>
                             <td className="td-buttons-container">
-                                <div className="buttons buttons-add-cancel add" onClick={ (()=>{ currentProductAdded( currentProductSelectionState, inputAmountState, inputPriceState ) }) } > {buttonAddState} </div>
+                                <div className="buttons buttons-add-cancel add" onClick={ (()=>{ currentProductAdded( parametersCurrentProductAdded ) }) } > {buttonAddState} </div>
                                 <div className="buttons buttons-add-cancel cancel" onClick={ (()=>{ resetProductSelection() }) }> {buttonCancelState} </div>
                             </td>
                         </tr> 
@@ -382,7 +314,7 @@ const AddProductToList = ( { urlConnectionBackend } )=>{
                         {
                             receiveProductState && 
                                 <div className="row-total-value">
-                                    <div className="total-value" >{ total.reduce( ( acc, currentValue ) => acc + currentValue, 0 ).toLocaleString() }</div>
+                                    <div className="total-value" >{ resulTotalState.reduce( ( acc, currentValue ) => acc + currentValue, 0 ).toLocaleString() }</div>
                                 </div>
                         }
             </div>
