@@ -9,7 +9,8 @@ const currentProductAdded = async( helpers )=>{
         urlConnectionBackend, 
         currentProductSelectionState, 
         setcurrentProductSelectionState, 
-        product_amount, product_price, 
+        product_amount, 
+        product_price, 
         setButtonAddState, 
         setButtonCancelState, 
         productPhotoOtherState, 
@@ -34,18 +35,26 @@ const currentProductAdded = async( helpers )=>{
             }
         };
 
-        const checkRepeatId = receiveProductState.findIndex( ( product )=> (
+        // const checkRepeatId = receiveProductState.findIndex( ( product )=> (
 
-            product.id === id
+        //     product.id === id
 
-        ));
+        // ));
+        console.log(currentProductSelectionState);
 
-        if( checkRepeatId != -1 ){
-            setButtonAddState('W')
-            setButtonCancelState('X')
-        }
+       if( receiveProductState !== undefined ){
+            const checkRepeatId = receiveProductState.find( product => (
 
-        if( checkRepeatId === -1 ){
+                product.id === id
+
+            ));
+
+            if( checkRepeatId != -1 ){
+                setButtonAddState('W')
+                setButtonCancelState('X')
+            }
+
+            if( checkRepeatId === -1 ){
 
             const helpers = {
                 urlConnectionBackend, 
@@ -66,6 +75,27 @@ const currentProductAdded = async( helpers )=>{
 
             return;
         }
+       }
+
+        const helpersAddNewProductToTheList = {
+                urlConnectionBackend, 
+                id, 
+                product_name, 
+                product_photo, 
+                product_amount, 
+                product_price, 
+                setInputAmountState, 
+                setInputPriceState, 
+                setReceiveProductState, 
+                setcurrentProductSelectionState, 
+                setButtonAddState, 
+                setButtonCancelState
+            }
+
+            addNewProductToTheList( helpersAddNewProductToTheList )
+        
+
+        
     }
 
     export {

@@ -4,6 +4,9 @@ import '../assets/styles/components/add-product-to-list.css';
 import { loadProductsWhenReloading } from "./helpers-add-product-to-list/load-products-when-reloading";
 import { useEffect } from "react";
 import { totalCostOfAllProducts } from "./helpers-add-product-to-list/total-cost-of-all-products";
+import { clickProductName } from "./helpers-add-product-to-list/click-product-name";
+import { currentProductAdded } from "./helpers-add-product-to-list/currentProductAdded";
+
 
 
 let currentProductSelection;
@@ -142,68 +145,68 @@ const AddProductToList = ( { urlConnectionBackend } )=>{
         setInputPriceStateEdit( currentValueInput );
     };
 
-    const clickProductName = async( index, event,id=searchId, class_crossed_out, product_name, product_photo, product_amount, product_price, result )=>{
+    // const clickProductName = async( index, event,id=searchId, class_crossed_out, product_name, product_photo, product_amount, product_price, result )=>{
 
-        const { target } = event;
+    //     const { target } = event;
 
-        let crossed_out = class_crossed_out;
+    //     let crossed_out = class_crossed_out;
 
-        const product = { 
-            id,
-            product_name,
-            product_photo,
-            product_amount,
-            product_price,
-        };
+    //     const product = { 
+    //         id,
+    //         product_name,
+    //         product_photo,
+    //         product_amount,
+    //         product_price,
+    //     };
 
-        if( target.innerText === '&' && crossed_out === 'not-crossed-out' && editOrNotEdit === 'not-edit' ){
+    //     if( target.innerText === '&' && crossed_out === 'not-crossed-out' && editOrNotEdit === 'not-edit' ){
             
-            setIndexProduct( index );
-            setProductToEdit( receiveProductState[index] )
+    //         setIndexProduct( index );
+    //         setProductToEdit( receiveProductState[index] )
 
-            setInputAmountStateEdit( product_amount );
-            setInputPriceStateEdit( product_price );
+    //         setInputAmountStateEdit( product_amount );
+    //         setInputPriceStateEdit( product_price );
 
-            setEditOrNotEdit('edit');
-            return
-        }
+    //         setEditOrNotEdit('edit');
+    //         return
+    //     }
 
-        if( editOrNotEdit === 'not-edit' ){ 
-            await axios.post( `${urlConnectionBackend}api/save-crossed-out-products`, 
-                {   
-                    id, 
-                    product_name, 
-                    product_photo,
-                    crossed_out, 
-                    product_amount, 
-                    product_price, 
-                    result
-                }
-            )
-            .then( ( {status} ) => {
+    //     if( editOrNotEdit === 'not-edit' ){ 
+    //         await axios.post( `${urlConnectionBackend}api/save-crossed-out-products`, 
+    //             {   
+    //                 id, 
+    //                 product_name, 
+    //                 product_photo,
+    //                 crossed_out, 
+    //                 product_amount, 
+    //                 product_price, 
+    //                 result
+    //             }
+    //         )
+    //         .then( ( {status} ) => {
     
-                if( status === 200 ){
+    //             if( status === 200 ){
                     
-                    axios.get( `${urlConnectionBackend}api/show-products` )
-                    .then( async({ data }) => { 
+    //                 axios.get( `${urlConnectionBackend}api/show-products` )
+    //                 .then( async({ data }) => { 
                         
-                        const { products } = data;
+    //                     const { products } = data;
 
-                        setReceiveProductState( products.map( ( item, index, arr )=> 
+    //                     setReceiveProductState( products.map( ( item, index, arr )=> 
                         
-                            item.id === id ? { ...item, crossed_out:item.crossed_out } : item
+    //                         item.id === id ? { ...item, crossed_out:item.crossed_out } : item
 
-                            )
-                        ) 
-                    })      
-                }
-            })
-            .catch( ( { message } ) =>{
+    //                         )
+    //                     ) 
+    //                 })      
+    //             }
+    //         })
+    //         .catch( ( { message } ) =>{
 
-                console.log(`No hay conexion con el backend ${ message }`)
-            } )
-        } 
-    };
+    //             console.log(`No hay conexion con el backend ${ message }`)
+    //         } )
+    //     } 
+    // };
 
     const parametersCurrentProductAdded = {
         urlConnectionBackend, 
@@ -216,6 +219,18 @@ const AddProductToList = ( { urlConnectionBackend } )=>{
         productPhotoOtherState, 
         inputProductNameState, 
         receiveProductState, 
+        setReceiveProductState
+    }
+
+    const parametersClickProductName = {
+        urlConnectionBackend,
+        editOrNotEdit, 
+        setEditOrNotEdit,
+        setIndexProduct,
+        setProductToEdit,
+        setInputAmountStateEdit,
+        setInputPriceStateEdit,
+        receiveProductState,
         setReceiveProductState
     }
 
@@ -273,8 +288,8 @@ const AddProductToList = ( { urlConnectionBackend } )=>{
                         </tr> 
                         }
 
-                        { Array.isArray(receiveProductState) && receiveProductState.map(( { id, product_name, product_photo, product_amount, product_price, result, crossed_out }, index ) => (
-                                <tr key={id} className={crossed_out} onClick={ ((event) => clickProductName( index, event, id, crossed_out, product_name, product_photo, product_amount, product_price, result )) } >
+                        { Array.isArray(receiveProductState) && receiveProductState.map(({ id, product_name, product_photo, product_amount, product_price, result, crossed_out }, index ) => (
+                                <tr key={id} className={crossed_out} onClick={ ( event ) => clickProductName( event, index, id, crossed_out, product_name, product_photo, product_amount, product_price, result, parametersClickProductName ) } >
                                     <td className="td-photo-container">
                                         <img className="photo-img" src={product_photo} />
                                     </td>
