@@ -18,7 +18,7 @@ const updateProductToList = async( product, setReceiveProductState, receiveProdu
             icon:'error',
             color: 'red',
             background: '#00000087',
-            timer: 1500,
+            timer: 3000,
             confirmButtonColor:'#01a503'
         })
         

@@ -14,18 +14,23 @@ import resetProductSelection from "./helpers/resetProductSelection";
 import updateProductList from './service/updateProductToList';
 
 
-let currentProductSelection;
+let setCurrentProductSelection;
 let uploadProductsAfterDeleting;
+
+let setInputAmountStateExport;
+let setInputPriceStateExport;
+let setProductPhotoOtherTemporaryExport;
+let setInputProductNameStateExport
 
 
 const receiveProduct = ( { id , product_name, product_photo, product_amount, product_price } )=>{   
 
-    id && currentProductSelection( { id, product_name, product_photo, product_amount, product_price } );
+    id && setCurrentProductSelection( { id, product_name, product_photo, product_amount, product_price } );
 };
 
 const AddProductToList = ( { urlConnectionBackend } )=>{
 
-    const [ currentProductSelectionState, setcurrentProductSelectionState ] = useState({});
+    const [ currentProductSelectionState, setCurrentProductSelectionState ] = useState({});
 
     const [ buttonCancelState, setButtonCancelState ] = useState( 'X' );
     const [ productPhotoOtherState ,setProductPhotoOtherState ]=useState({});
@@ -42,11 +47,18 @@ const AddProductToList = ( { urlConnectionBackend } )=>{
     const [ editOrNotEdit, setEditOrNotEdit ] = useState('not-edit');
     const [ indexProduct, setIndexProduct ] = useState( null );
     const [ productToEdit, setProductToEdit ] = useState({}); 
-    const [ currentPhotoOther, setCurrentPhotoOther ] = useState('')
+    const [ currentPhotoOtherTemporary, setCurrentPhotoOtherTemporary ] = useState('')
 
-    // variables hechas para vigilar el cambio de estado de un componente fuera del componente padre
-    currentProductSelection = setcurrentProductSelectionState;
+    // Variables hechas para vigilar el cambio de estado de un componente fuera del componente padre
+    setCurrentProductSelection = setCurrentProductSelectionState;
     uploadProductsAfterDeleting = setReceiveProductState;
+
+    // Variables para exportar estados para recetear los campos a la hora de agregar un producto
+    setInputAmountStateExport = setInputAmountState;
+    setInputPriceStateExport = setInputPriceState;
+    setProductPhotoOtherTemporaryExport = setCurrentPhotoOtherTemporary
+    setInputProductNameStateExport = setInputProductNameState  
+
 
     useEffect(()=>{
 
@@ -117,7 +129,7 @@ const AddProductToList = ( { urlConnectionBackend } )=>{
 
         const productPhotoOther = target.files[0];
         const temporaryUrl = URL.createObjectURL( productPhotoOther )
-        setCurrentPhotoOther( temporaryUrl )
+        setCurrentPhotoOtherTemporary( temporaryUrl )
         setProductPhotoOtherState( productPhotoOther );
     }
     const functionValueProductNameState = ( { target } )=>{
@@ -156,10 +168,10 @@ const AddProductToList = ( { urlConnectionBackend } )=>{
                 <table className="container-table" >
                     <Thead/>
                     <tbody>
-                       { currentProductSelectionState.id != undefined ? 
+                       { currentProductSelectionState.id !== undefined ? 
                        <tr>
                             <td className="td-photo-container">
-                                <ProductPhoto data = { [ product_name, onChangeProductPhoto, product_photo, currentPhotoOther ] } />
+                                <ProductPhoto data = { [ product_name, onChangeProductPhoto, product_photo, currentPhotoOtherTemporary ] } />
                             </td>
                             <td className="td-product-container">
                                 <ProductName 
@@ -177,7 +189,7 @@ const AddProductToList = ( { urlConnectionBackend } )=>{
                                     data = { [ currentProductSelectionState, inputAmountState, inputPriceState, receiveProductState, setReceiveProductState, inputProductNameState, productPhotoOtherState ] } 
                                     />
                                 <div className="buttons buttons-add-cancel cancel" onClick={ ()=> 
-                                    resetProductSelection( setEditOrNotEdit, setIndexProduct, setInputAmountState, setInputPriceState, setcurrentProductSelectionState )
+                                    resetProductSelection( setEditOrNotEdit, setIndexProduct, setInputAmountState, setInputPriceState )
                                     }> 
                                     {buttonCancelState} 
                                 </div>
@@ -185,14 +197,14 @@ const AddProductToList = ( { urlConnectionBackend } )=>{
                         </tr> 
                         : 
                         <tr>
-                            <EmptyTable />
+                            <EmptyTable/>
                         </tr> 
                         }
 
                         { Array.isArray(receiveProductState) && receiveProductState.map(({ id, product_name, product_photo, product_amount, product_price, result, crossed_out }, index ) => (
                                 <tr key={id} className={crossed_out} onClick={ ( event ) => {
-                                    clickProductName( event, id, product_name, product_photo, product_amount, product_price, result, receiveProductState, setReceiveProductState, editOrNotEdit ) 
-                                    handleProductEdit( event, editOrNotEdit, setIndexProduct, index, setProductToEdit, receiveProductState, setInputAmountStateEdit, product_amount, setInputPriceStateEdit, product_price, setEditOrNotEdit, setReceiveProductState )
+                                    clickProductName( event, id, product_name, product_photo, product_amount, product_price, result, receiveProductState, setReceiveProductState, editOrNotEdit, setEditOrNotEdit ) 
+                                    handleProductEdit( event, editOrNotEdit, setIndexProduct, index, setProductToEdit, receiveProductState, setInputAmountStateEdit, product_amount, setInputPriceStateEdit, product_price, setEditOrNotEdit )
                                     }} >
                                     <td className="td-photo-container">
                                         <img className="photo-img" src={product_photo} />
@@ -220,9 +232,9 @@ const AddProductToList = ( { urlConnectionBackend } )=>{
                                     <td className="td-total-container">
                                         { indexProduct === index && crossed_out === 'not-crossed-out' ? (
                                             <>
-                                                <div id='button-update' className="buttons buttons-add-cancel add" onClick={ (event) => updateProduct( index, id, product_name, product_photo, inputAmountStateEdit, inputPriceStateEdit, crossed_out ) } > W </div>
+                                                <div id='button-update' className="buttons buttons-add-cancel add" onClick={ () => updateProduct( index, id, product_name, product_photo, inputAmountStateEdit, inputPriceStateEdit, crossed_out ) } > W </div>
                                                 <div id='button-reset' className="buttons buttons-add-cancel cancel" onClick={ () => 
-                                                    resetProductSelection( setEditOrNotEdit, setIndexProduct, setInputAmountState, setInputPriceState, setcurrentProductSelectionState ) 
+                                                    resetProductSelection( setEditOrNotEdit, setIndexProduct, setInputAmountState, setInputPriceState ) 
                                                     } > X 
                                                 </div>
                                             </>
@@ -258,4 +270,9 @@ export {
     AddProductToList,
     receiveProduct,
     uploadProductsAfterDeleting,
+    setCurrentProductSelection,
+    setInputAmountStateExport,
+    setInputPriceStateExport,
+    setProductPhotoOtherTemporaryExport,
+    setInputProductNameStateExport,
 };

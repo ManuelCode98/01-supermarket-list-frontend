@@ -20,7 +20,7 @@ const currentProductAddedDatabase = async( product, receiveProductState, setRece
             icon:'error',
             color: 'red',
             background: '#00000087',
-            timer: 1500,
+            timer: 3000,
             confirmButtonColor:'#01a503'
         })
         console.log('Error al guardar el producto en la base de datos, ', message);

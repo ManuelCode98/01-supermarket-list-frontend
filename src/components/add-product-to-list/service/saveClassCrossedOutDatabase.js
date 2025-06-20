@@ -3,8 +3,6 @@ import { http } from "../../..";
 
 
 
-
-
 const saveClassCrossedOutDatabase = async( productClassName, id, product_name, product_photo, product_amount, product_price, result ) => {
 
     const product = {   
@@ -29,7 +27,7 @@ const saveClassCrossedOutDatabase = async( productClassName, id, product_name, p
             icon:'error',
             color: 'red',
             background: '#00000087',
-            timer: 1500,
+            timer: 3000,
             confirmButtonColor:'#01a503'
         })
         console.log(`Error al tratar de guardar el tachado en la base de datos ${ message }`)

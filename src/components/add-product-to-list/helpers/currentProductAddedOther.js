@@ -1,6 +1,7 @@
 import { savePhotoOfTheNewProduct } from "../service/save-photo-of-the-new-product";
 import currentProductAddedDatabase from "../service/currentProductAddedDatabase";
 import createProductDatabase from "../service/createProductDatabase";
+import { setCurrentProductSelection, setInputAmountStateExport, setInputPriceStateExport, setInputProductNameStateExport, setProductPhotoOtherTemporaryExport } from "../add-product-to-list";
 
 
 
@@ -28,7 +29,14 @@ const currentProductAddedOther = async( inputAmountState, inputPriceState, recei
             const product = { id:waitingForTheId, product_photo, product_name, product_amount:[ 0, product_amount ], product_price: [ 0, product_price], result: [ 0, result], crossed_out };
             
             setReceiveProductState( prevArr => [...prevArr, product] )
-            currentProductAddedDatabase( product, receiveProductState, setReceiveProductState )   
+            currentProductAddedDatabase( product, receiveProductState, setReceiveProductState )
+
+            setProductPhotoOtherTemporaryExport('');
+            setInputProductNameStateExport('');
+            setInputAmountStateExport( 1 );
+            setInputPriceStateExport( 1 );
+
+            setCurrentProductSelection({});
         }
     };
 

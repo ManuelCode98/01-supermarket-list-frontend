@@ -18,8 +18,7 @@ const ButtonAdd = ( { data } ) => {
     const productPhotoOtherState        = data[6];
 
     const { product_name } = currentProductSelectionState;
-  
-
+   
   return (
     <>
         {

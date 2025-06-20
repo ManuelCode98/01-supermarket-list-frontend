@@ -6,7 +6,7 @@ const ProductPhoto = ( { data } ) => {
   const product_name           = data[0];
   const onChangeProductPhoto   = data[1];
   const product_photo          = data[2];
-  const currentPhotoOther = data[3];
+  const currentPhotoOtherTemporary = data[3];
   
 
   return (
@@ -15,8 +15,8 @@ const ProductPhoto = ( { data } ) => {
         <>
             <label htmlFor='input-file' className="label-file" >
               { 
-                currentPhotoOther.length > 0 ? 
-                  <img className="img-temporary-url" src={ currentPhotoOther } />
+                currentPhotoOtherTemporary.length > 0 ? 
+                  <img className="img-temporary-url" src={ currentPhotoOtherTemporary } />
                   :
                   'D'
               }

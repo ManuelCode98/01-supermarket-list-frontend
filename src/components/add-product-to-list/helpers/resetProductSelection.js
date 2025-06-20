@@ -1,13 +1,14 @@
+import { setCurrentProductSelection } from "../add-product-to-list";
 
 
-const resetProductSelection = ( setEditOrNotEdit, setIndexProduct, setInputAmountState, setInputPriceState, setcurrentProductSelectionState )=>{
+const resetProductSelection = ( setEditOrNotEdit, setIndexProduct, setInputAmountState, setInputPriceState )=>{
         
     setEditOrNotEdit('not-edit');
     setIndexProduct( null );
 
     setInputAmountState( 1 );
     setInputPriceState( 1 );
-    setcurrentProductSelectionState({});
+    setCurrentProductSelection({});
 
 };
 

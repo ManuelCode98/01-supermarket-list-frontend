@@ -1,7 +1,8 @@
 
 
 
-const EmptyTable = () => {
+const EmptyTable = ( ) => {
+
   return (
     <>
         <td className="td-photo-container"></td>

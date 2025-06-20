@@ -1,3 +1,4 @@
+import { setCurrentProductSelection , setInputAmountStateExport, setInputPriceStateExport } from "../add-product-to-list";
 import currentProductAddedDatabase from "../service/currentProductAddedDatabase";
 
 
@@ -24,6 +25,11 @@ const currentProductAdded = async( currentProduct, inputAmountState, inputPriceS
     
 
     currentProductAddedDatabase( product, receiveProductState, setReceiveProductState );
+
+    setInputAmountStateExport( 1 );
+    setInputPriceStateExport( 1 );
+    setCurrentProductSelection({});
+  
     
     if( !receiveProductState ){
         

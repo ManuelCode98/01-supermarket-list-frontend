@@ -1,9 +1,8 @@
 
-import { useRef, useState } from 'react';
-import './search-engine.css';
-import { receiveProduct } from '../add-product-to-list/add-product-to-list';
-import getProductNames from './services/getProductNames';
+import { useEffect, useRef, useState } from 'react';
 import resultFieldSelection from './helpers/resultFieldSelection';
+import getAllProducts from './services/getAllProducts';
+import './search-engine.css';
 
 const SearchEngine = ( { urlConnectionBackend } )=>{
     
@@ -11,7 +10,20 @@ const SearchEngine = ( { urlConnectionBackend } )=>{
     const contentProduct = useRef( null );
     const [ searchingProduct, setSearchingProduct ] = useState('');
     const [ productFoundByNameArr, setProductFoundByNameArr ] = useState([]);
+    const [ allProductsState, setAllProductsState ] = useState([]);
 
+    useEffect(()=>{
+
+        const functionSetAllproducts = async()=>{
+            const allProducts = await getAllProducts( urlConnectionBackend )
+            setAllProductsState( allProducts )
+        }
+
+        functionSetAllproducts();
+
+    },[])
+
+    
     const onInputChange = ( { target } )=>{
         
         const letterSearch = target.value;
@@ -19,7 +31,10 @@ const SearchEngine = ( { urlConnectionBackend } )=>{
         
         const setProductNames = async(  )=>{
 
-            const productNames = await getProductNames( urlConnectionBackend, letterSearch )
+            const productNames = allProductsState.filter( 
+                searchingProduct => searchingProduct.product_name.toLowerCase().startsWith( letterSearch.toLowerCase() )
+                
+            );
             setProductFoundByNameArr( productNames )
         }
         setProductNames()

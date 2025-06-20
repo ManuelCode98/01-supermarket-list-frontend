@@ -2,9 +2,7 @@ import saveClassCrossedOutDatabase from "../service/saveClassCrossedOutDatabase"
 
 
 
-
-
-const clickProductName = async( event, id, product_name, product_photo, product_amount, product_price, result, receiveProductState, setReceiveProductState, editOrNotEdit )=>{
+const clickProductName = async( event, id, product_name, product_photo, product_amount, product_price, result, receiveProductState, setReceiveProductState, editOrNotEdit, setEditOrNotEdit )=>{
                                     
     const { currentTarget } = event;
     const { target } = event;
@@ -13,18 +11,8 @@ const clickProductName = async( event, id, product_name, product_photo, product_
     const WhatClassDoesItHave = currentTarget.className;
 
     
-    if( target.innerText === '&' && notCrossedOut ) {
-        swal.fire({
-            title:'Oh!',
-            text:'No puedes editar un producto si esta tachado en la lista!',
-            icon:'error',
-            color: 'red',
-            background: '#00000087',
-            // timer: 1500,
-            confirmButtonColor:'#01a503'
-        })
-        return
-    }
+    if( target.innerText === '&' ) return
+        
     if( editOrNotEdit === 'edit' ) return
 
     if( WhatClassDoesItHave === notCrossedOut ){

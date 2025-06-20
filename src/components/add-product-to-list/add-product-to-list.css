@@ -176,8 +176,6 @@
         margin-left: 3px;
         width: 90%;
     }
-
-
 }
 
 @media ( max-width: 672px ){
@@ -193,7 +191,7 @@
     }
     
     .label-file {
-        margin-top: 0rem;
+        margin-top: -1.5rem;
         font-size: 2.3rem;
     }
 
@@ -210,6 +208,4 @@
         margin: 0;
         width: 90%;
     }
-
-
 }
