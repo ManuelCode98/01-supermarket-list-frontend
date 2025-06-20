@@ -1,7 +1,7 @@
 
 import { useRef, useState } from 'react';
 import './search-engine.css';
-import { receiveProduct } from '../add-product-to-list';
+import { receiveProduct } from '../add-product-to-list/add-product-to-list';
 import getProductNames from './services/getProductNames';
 import resultFieldSelection from './helpers/resultFieldSelection';
 

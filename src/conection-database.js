@@ -1,22 +1,23 @@
-import axios from "axios";
+import { http } from './index';
 import { useEffect, useState } from "react";
 
 
-const useConnectionDatabase = ()=>{
+const UseConnectionDatabase = async()=>{
 
-    const [ urlConnectionBackendCondition, setUrlConnectionBackendCondition ] = useState('');
+    // const [ urlConnectionBackendCondition, setUrlConnectionBackendCondition ] = useState('');
+    let urlConnectionBackendCondition = '';
 
     const urlConnectionBackendOne = import.meta.env.VITE_URL_CONNECTION_BACKEND;
     const urlConnectionBackendTwo = import.meta.env.VITE_URL_CONNECTION_BACKEND_TWO;
 
-    useEffect(()=>{
+    // useEffect(()=>{
         
         const getConnectionBackend = async()=>{
             
-            await axios.get( urlConnectionBackendOne, {timeout: 1000} ).then( ({ status }) => {
+            await http.get( urlConnectionBackendOne, {timeout: 1000} ).then( ({ status }) => {
 
             if( status === 200 ){
-                setUrlConnectionBackendCondition( urlConnectionBackendOne );
+                urlConnectionBackendCondition = urlConnectionBackendOne;
                 return
             }
             
@@ -26,9 +27,9 @@ const useConnectionDatabase = ()=>{
 
             });
 
-            await axios.get( urlConnectionBackendTwo, { timeout: 1000 } ).then( ({ status }) => {
+            await http.get( urlConnectionBackendTwo, { timeout: 1000 } ).then( ({ status }) => {
                 if( status === 200 ){
-                    setUrlConnectionBackendCondition( urlConnectionBackendTwo );
+                    urlConnectionBackendCondition = urlConnectionBackendTwo;
                     return
                 }
                 
@@ -40,14 +41,14 @@ const useConnectionDatabase = ()=>{
         }
 
 
-        getConnectionBackend();
-    },[])
-
+        await getConnectionBackend();
+    // },[])
+// console.log(urlConnectionBackendCondition);
     return urlConnectionBackendCondition;
 
 }
 
 
 export {
-    useConnectionDatabase
+    UseConnectionDatabase
 }

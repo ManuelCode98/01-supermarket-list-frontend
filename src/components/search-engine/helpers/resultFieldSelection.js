@@ -1,4 +1,4 @@
-import { receiveProduct } from "../../add-product-to-list";
+import { receiveProduct } from "../../add-product-to-list/add-product-to-list";
 
 
 

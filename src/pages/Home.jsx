@@ -1,11 +1,10 @@
 import { SearchEngine } from '../components/search-engine/search-engine';
 import { RemoveCrossedOutProduct } from '../components/remove-crossed-out-product';
-import { AddProductToList } from '../components/add-product-to-list';
-import { useConnectionDatabase } from '../conection-database';
+import { AddProductToList } from '../components/add-product-to-list/add-product-to-list';
+import { urlConnectionBackend } from '..';
 
-const Home = () => {
 
-    const urlConnectionBackend = useConnectionDatabase();
+const Home = () => {    
 
   return (
     <>

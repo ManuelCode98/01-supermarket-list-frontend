@@ -7,8 +7,11 @@ const totalCostOfAllProducts = ( receiveProductState )=>{
     if( receiveProductState ){
         for (let i = 0; i < receiveProductState.length; i++) {
         
-        total.push( receiveProductState[i].result);                    
-    }
+            receiveProductState[i].crossed_out === 'not-crossed-out'
+            ? total.push( receiveProductState[i].result[1])
+            : total.push( receiveProductState[i].result[0])
+                           
+        }
     }
 
     return total;
